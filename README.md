@@ -1,6 +1,12 @@
 # CoEvent - Modern Events Platform
 
-A Next.js 14 application for discovering, creating, and managing local or online events.
+A Next.js 15 application for discovering, creating, and managing local or online events.
+
+## Hosted Version
+
+CoEvent is live and hosted at: **[https://coevent.vercel.app/](https://coevent.vercel.app/)**
+
+Visit the live application to explore events, create an account, and experience the full platform!
 
 ## Features
 
@@ -12,7 +18,7 @@ A Next.js 14 application for discovering, creating, and managing local or online
 
 ## Tech Stack
 
-- Next.js 14 with App Router
+- Next.js 15 with App Router
 - TypeScript
 - Tailwind CSS
 - Shadcn/UI components
