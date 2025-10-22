@@ -9,15 +9,26 @@ type OAuthTokens = {
   expiry_date?: string | null
 }
 
+// Check if Google credentials are properly configured
+const hasGoogleCredentials = !!(
+  process.env.GOOGLE_CLIENT_ID && 
+  process.env.GOOGLE_CLIENT_SECRET && 
+  process.env.GOOGLE_REDIRECT_URI
+)
+
 export function getOAuthClient() {
-  const clientId = process.env.GOOGLE_CLIENT_ID!
-  const clientSecret = process.env.GOOGLE_CLIENT_SECRET!
-  const redirectUri = process.env.GOOGLE_REDIRECT_URI!
+  const clientId = process.env.GOOGLE_CLIENT_ID || 'dummy-client-id'
+  const clientSecret = process.env.GOOGLE_CLIENT_SECRET || 'dummy-client-secret'
+  const redirectUri = process.env.GOOGLE_REDIRECT_URI || 'http://localhost:3000/api/google/callback'
 
   return new google.auth.OAuth2(clientId, clientSecret, redirectUri)
 }
 
 export function getConsentUrl(state: string) {
+  if (!hasGoogleCredentials) {
+    throw new Error("Google Calendar integration not configured")
+  }
+  
   const oauth2Client = getOAuthClient()
   const url = oauth2Client.generateAuthUrl({
     access_type: "offline",
@@ -35,6 +46,10 @@ export function getConsentUrl(state: string) {
 }
 
 export async function exchangeCodeForTokens(code: string): Promise<OAuthTokens> {
+  if (!hasGoogleCredentials) {
+    throw new Error("Google Calendar integration not configured")
+  }
+  
   const oauth2Client = getOAuthClient()
   const { tokens } = await oauth2Client.getToken(code)
   const result: OAuthTokens = {
@@ -73,6 +88,10 @@ export async function getUserTokens(userId: string): Promise<OAuthTokens | null>
 }
 
 export async function getAuthedCalendarClient(userId: string) {
+  if (!hasGoogleCredentials) {
+    return null
+  }
+  
   const oauth2Client = getOAuthClient()
   const tokens = await getUserTokens(userId)
   if (!tokens) return null
@@ -92,6 +111,10 @@ export async function addEventToPrimaryCalendar(params: {
   end: Date
   timezone?: string
 }) {
+  if (!hasGoogleCredentials) {
+    throw new Error("Google Calendar integration not configured")
+  }
+  
   const calendar = await getAuthedCalendarClient(params.userId)
   if (!calendar) throw new Error("Google account not connected")
 
