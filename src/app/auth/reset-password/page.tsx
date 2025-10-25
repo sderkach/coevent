@@ -19,11 +19,14 @@ export default function ResetPasswordPage() {
   const router = useRouter()
 
   useEffect(() => {
-    // Extract token from URL hash
+    // Extract token from URL hash (OAuth flow) or query params (PKCE flow)
     const hashParams = new URLSearchParams(window.location.hash.substring(1))
-    const accessToken = hashParams.get('access_token')
-    const refreshToken = hashParams.get('refresh_token')
-    const type = hashParams.get('type')
+    const queryParams = new URLSearchParams(window.location.search)
+    
+    const accessToken = hashParams.get('access_token') || queryParams.get('access_token')
+    const refreshToken = hashParams.get('refresh_token') || queryParams.get('refresh_token')
+    const pkceToken = queryParams.get('token')
+    const type = hashParams.get('type') || queryParams.get('type')
     
     if (accessToken && refreshToken && type === 'recovery') {
       setHasToken(true)
@@ -31,6 +34,15 @@ export default function ResetPasswordPage() {
       supabase.auth.setSession({
         access_token: accessToken,
         refresh_token: refreshToken,
+      })
+    } else if (pkceToken && type === 'recovery') {
+      setHasToken(true)
+      // Handle PKCE flow - exchange token for session
+      supabase.auth.exchangeCodeForSession(pkceToken).then(({ data, error }) => {
+        if (error) {
+          setError("Invalid or expired reset link. Please request a new password reset.")
+          setHasToken(false)
+        }
       })
     } else {
       setError("Invalid or expired reset link. Please request a new password reset.")
