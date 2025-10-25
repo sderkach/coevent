@@ -45,7 +45,7 @@ export default function ForgotPasswordPage() {
               Check Your Email
             </div>
             <p className="text-muted-foreground mb-4">
-              We've sent a password reset link to <strong>{email}</strong>
+              We&apos;ve sent a password reset link to <strong>{email}</strong>
             </p>
             <p className="text-sm text-muted-foreground mb-6">
               Click the link in the email to reset your password. The link will expire in 1 hour.
@@ -70,7 +70,7 @@ export default function ForgotPasswordPage() {
         <CardHeader>
           <CardTitle>Forgot Your Password?</CardTitle>
           <CardDescription>
-            Enter your email address and we'll send you a link to reset your password.
+            Enter your email address and we&apos;ll send you a link to reset your password.
           </CardDescription>
         </CardHeader>
         <CardContent>
