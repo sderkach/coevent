@@ -31,7 +31,7 @@ export function AddToGoogleCalendarButton({ title, description, location, startI
       })
 
       if (res.status === 401) {
-        window.location.href = "/api/google/authorize"
+        window.location.href = `/api/google/authorize?callback=${encodeURIComponent(window.location.href)}`
         return
       }
 
