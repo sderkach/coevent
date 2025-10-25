@@ -28,12 +28,20 @@ export function AttendEventButton({ eventId, isFree, price, isLoggedIn }: Attend
     setError("")
 
     try {
+      // Get current user
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) {
+        router.push("/auth/login")
+        return
+      }
+
       if (isFree) {
         // For free events, create booking directly
         const { error } = await supabase
           .from("bookings")
           .insert({
             event_id: eventId,
+            user_id: user.id,
             status: "confirmed",
             payment_status: "completed",
           })

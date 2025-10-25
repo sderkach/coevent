@@ -164,14 +164,16 @@ export default async function EventDetailsPage({ params }: { params: Promise<{ i
                   </div>
 
                   <div className="pt-4">
-                    <AddToGoogleCalendarButton
-                      eventId={event.id}
-                      title={event.title}
-                      description={event.description}
-                      location={event.location}
-                      startISO={eventDate.toISOString()}
-                      endISO={eventEnd.toISOString()}
-                    />
+                    {(isRegistered || isOrganizer) && (
+                      <AddToGoogleCalendarButton
+                        eventId={event.id}
+                        title={event.title}
+                        description={event.description}
+                        location={event.location}
+                        startISO={eventDate.toISOString()}
+                        endISO={eventEnd.toISOString()}
+                      />
+                    )}
                   </div>
                 </CardContent>
               </Card>
