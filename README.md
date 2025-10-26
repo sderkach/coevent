@@ -8,6 +8,12 @@ CoEvent is live and hosted at: **[https://coevent.vercel.app/](https://coevent.v
 
 Visit the live application to explore events, create an account, and experience the full platform!
 
+### Test User Credentials
+
+You can use the following test account to explore the platform:
+- **Email**: `test@example.com`
+- **Password**: `QDkTb7z6GDC_ALA`
+
 ### Testing Payments
 
 To test paid event registrations, use the following Stripe test card:
