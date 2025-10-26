@@ -3,11 +3,13 @@ import { Header } from "@/components/header"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
-import { Calendar, MapPin, Users, User } from "lucide-react"
+import { Calendar, MapPin, Users, User, Edit } from "lucide-react"
 import { format } from "date-fns"
 import { redirect } from "next/navigation"
 import { AttendEventButton } from "@/components/attend-event-button"
+import { CancelRegistrationButton } from "@/components/cancel-registration-button"
 import { AddToGoogleCalendarButton } from "@/components/add-to-google-calendar-button"
+import Link from "next/link"
 
 export default async function EventDetailsPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -90,16 +92,28 @@ export default async function EventDetailsPage({ params }: { params: Promise<{ i
             <div className="lg:col-span-2 space-y-6">
               <div className="space-y-4">
                 <div className="flex items-start justify-between gap-4">
-                  <h1 className="text-3xl font-bold text-balance">{event.title}</h1>
+                  <div className="flex-1">
+                    <h1 className="text-3xl font-bold text-balance">{event.title}</h1>
+                    <div className="flex items-center gap-2 text-muted-foreground mt-2">
+                      <User className="h-4 w-4" />
+                      <span className="text-sm">Organized by {profile?.display_name || "Unknown Organizer"}</span>
+                    </div>
+                  </div>
                   <Badge variant={event.is_free ? "secondary" : "default"} className="text-base px-3 py-1">
                     {event.is_free ? "Free" : `£${event.price}`}
                   </Badge>
                 </div>
 
-                <div className="flex items-center gap-2 text-muted-foreground">
-                  <User className="h-4 w-4" />
-                  <span className="text-sm">Organized by {profile?.display_name || "Unknown Organizer"}</span>
-                </div>
+                {isOrganizer && (
+                  <div className="flex gap-2">
+                    <Button asChild variant="outline" size="sm">
+                      <Link href={`/events/${event.id}/edit`}>
+                        <Edit className="mr-2 h-4 w-4" />
+                        Edit Event
+                      </Link>
+                    </Button>
+                  </div>
+                )}
               </div>
 
               <div className="prose prose-sm max-w-none">
@@ -150,9 +164,7 @@ export default async function EventDetailsPage({ params }: { params: Promise<{ i
                         You&apos;re the organizer
                       </Button>
                     ) : isRegistered ? (
-                      <Button className="w-full" variant="secondary" disabled>
-                        Already Registered
-                      </Button>
+                      <CancelRegistrationButton eventId={event.id} />
                     ) : (
                       <AttendEventButton
                         eventId={event.id}
