@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server"
 import { Header } from "@/components/header"
+import { Footer } from "@/components/footer"
 import { EventCard } from "@/components/event-card"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
@@ -116,6 +117,7 @@ export default async function HomePage({
                   )}
         </section>
       </main>
+      <Footer />
     </>
   )
 }

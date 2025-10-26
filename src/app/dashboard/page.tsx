@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server"
 import { Header } from "@/components/header"
+import { Footer } from "@/components/footer"
 import { EventCard } from "@/components/event-card"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription } from "@/components/ui/card"
@@ -100,6 +101,7 @@ export default async function DashboardPage() {
           </section>
         </div>
       </main>
+      <Footer />
     </>
   )
 }

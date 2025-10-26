@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Calendar } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 
@@ -45,8 +46,15 @@ export default function SignupPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <Card className="w-full max-w-md">
+    <div className="min-h-screen flex flex-col bg-gray-50">
+      <div className="container mx-auto px-4 pt-8 pb-4">
+        <Link href="/" className="inline-flex items-center space-x-2 text-xl font-bold hover:opacity-80 transition-opacity">
+          <Calendar className="h-6 w-6" />
+          <span>CoEvent</span>
+        </Link>
+      </div>
+      <div className="flex-1 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+        <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle>Create your account</CardTitle>
           <CardDescription>
@@ -99,7 +107,8 @@ export default function SignupPage() {
             </Link>
           </div>
         </CardContent>
-      </Card>
+        </Card>
+      </div>
     </div>
   )
 }

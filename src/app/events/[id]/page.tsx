@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server"
 import { Header } from "@/components/header"
+import { Footer } from "@/components/footer"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
@@ -193,6 +194,7 @@ export default async function EventDetailsPage({ params }: { params: Promise<{ i
           </div>
         </div>
       </main>
+      <Footer />
     </>
   )
 }

@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { createClient } from "@/lib/supabase/client"
+import { Footer } from "@/components/footer"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -197,6 +198,7 @@ export default function CreateEventPage() {
         </CardContent>
       </Card>
       </div>
+      <Footer />
     </div>
   )
 }
