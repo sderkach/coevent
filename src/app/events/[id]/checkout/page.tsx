@@ -6,8 +6,9 @@ import { loadStripe } from "@stripe/stripe-js"
 import { Elements, PaymentElement, useStripe, useElements } from "@stripe/react-stripe-js"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Header } from "@/components/header"
 
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!)
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || "pk_test_placeholder")
 
 function CheckoutForm({ eventId }: { eventId: string }) {
   const stripe = useStripe()
@@ -63,9 +64,21 @@ export default function CheckoutPage({ params }: { params: Promise<{ id: string 
       try {
         const { id } = await params
         setEventId(id)
+        
+        // Check if Stripe is configured
+        if (!process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY) {
+          setError("Stripe is not configured. Please contact the administrator.")
+          return
+        }
+        
         const secret = await startCheckoutSession(id)
-        setClientSecret(secret!)
+        if (!secret) {
+          setError("Failed to start checkout session")
+          return
+        }
+        setClientSecret(secret)
       } catch (err: unknown) {
+        console.error("Error initializing checkout:", err)
         setError(err instanceof Error ? err.message : "An error occurred")
       } finally {
         setLoading(false)
@@ -77,7 +90,9 @@ export default function CheckoutPage({ params }: { params: Promise<{ id: string 
 
   if (loading) {
     return (
-      <div className="container mx-auto px-4 py-8 max-w-7xl">
+      <>
+        <Header />
+        <div className="container mx-auto px-4 py-8 max-w-7xl">
         <div className="max-w-2xl mx-auto">
         <Card>
           <CardContent className="text-center py-8">
@@ -86,12 +101,15 @@ export default function CheckoutPage({ params }: { params: Promise<{ id: string 
         </Card>
         </div>
       </div>
+      </>
     )
   }
 
   if (error) {
     return (
-      <div className="container mx-auto px-4 py-8 max-w-7xl">
+      <>
+        <Header />
+        <div className="container mx-auto px-4 py-8 max-w-7xl">
         <div className="max-w-2xl mx-auto">
         <Card>
           <CardContent className="text-center py-8">
@@ -100,11 +118,14 @@ export default function CheckoutPage({ params }: { params: Promise<{ id: string 
         </Card>
         </div>
       </div>
+      </>
     )
   }
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-7xl">
+    <>
+      <Header />
+      <div className="container mx-auto px-4 py-8 max-w-7xl">
       <div className="max-w-2xl mx-auto">
       <Card>
         <CardHeader>
@@ -121,5 +142,6 @@ export default function CheckoutPage({ params }: { params: Promise<{ id: string 
       </Card>
         </div>
       </div>
+      </>
   )
 }
