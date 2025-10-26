@@ -53,13 +53,6 @@ CoEvent includes several accessibility features:
 7. **Color Contrast**: WCAG-compliant color schemes for both light and dark modes
 8. **Screen Reader Support**: Proper labeling and relationships between elements
 
-### Areas for Enhancement
-
-While the app uses accessible Shadcn/UI components and follows semantic HTML practices, a full audit with tools like [axe DevTools](https://www.deque.com/axe/devtools/) or [WAVE](https://wave.webaim.org/) would identify specific opportunities for improvement, such as:
-- Adding skip-to-content links
-- Implementing ARIA live regions for dynamic content updates
-- Adding more detailed ARIA labels for complex interactions
-
 ## Getting Started
 
 1. Install dependencies:
