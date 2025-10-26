@@ -8,6 +8,15 @@ CoEvent is live and hosted at: **[https://coevent.vercel.app/](https://coevent.v
 
 Visit the live application to explore events, create an account, and experience the full platform!
 
+### Testing Payments
+
+To test paid event registrations, use the following Stripe test card:
+- **Card Number**: `4242 4242 4242 4242`
+- **Expiry**: `08/28`
+- **CVC**: `345`
+
+Any future expiry date works, and no real charges are made.
+
 ## Features
 
 - **Event Discovery**: Browse and search events with filters
@@ -25,6 +34,31 @@ Visit the live application to explore events, create an account, and experience 
 - Supabase (Auth, Database, Storage)
 - Stripe (Payments)
 - Google Calendar API
+
+## Accessibility
+
+CoEvent includes several accessibility features:
+
+### Implemented Features
+
+1. **Semantic HTML**: Uses proper semantic elements (`<header>`, `<main>`, `<nav>`, etc.)
+2. **Keyboard Navigation**: All interactive elements are keyboard accessible
+3. **Focus States**: Visible focus indicators on buttons, links, and form inputs
+4. **Form Labels**: All form inputs have associated labels using Radix UI components
+5. **Alt Text**: Images include descriptive alt text
+6. **ARIA Attributes**: 
+   - Form controls use `aria-invalid` for error states
+   - Form descriptions linked via `aria-describedby`
+   - Proper role attributes via Radix UI primitives
+7. **Color Contrast**: WCAG-compliant color schemes for both light and dark modes
+8. **Screen Reader Support**: Proper labeling and relationships between elements
+
+### Areas for Enhancement
+
+While the app uses accessible Shadcn/UI components and follows semantic HTML practices, a full audit with tools like [axe DevTools](https://www.deque.com/axe/devtools/) or [WAVE](https://wave.webaim.org/) would identify specific opportunities for improvement, such as:
+- Adding skip-to-content links
+- Implementing ARIA live regions for dynamic content updates
+- Adding more detailed ARIA labels for complex interactions
 
 ## Getting Started
 
