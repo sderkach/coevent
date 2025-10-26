@@ -26,14 +26,14 @@ function CheckoutForm({ eventId }: { eventId: string }) {
     setLoading(true)
     setError("")
 
-    const { error } = await stripe.confirmPayment({
+    const { error, paymentIntent } = await stripe.confirmPayment({
       elements,
       redirect: "if_required",
     })
     
     // If payment requires no redirect (payment method confirmed server-side), redirect manually
-    if (!error) {
-      window.location.href = `/events/${eventId}/checkout/success`
+    if (!error && paymentIntent) {
+      window.location.href = `/events/${eventId}/checkout/success?payment_intent=${paymentIntent.id}`
     }
 
     if (error) {
