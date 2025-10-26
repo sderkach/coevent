@@ -38,51 +38,48 @@ export async function startCheckoutSession(eventId: string) {
     throw new Error("Already registered for this event")
   }
 
-  // Create Stripe checkout session
-  const session = await stripe.checkout.sessions.create({
-    ui_mode: "embedded",
-    line_items: [
-      {
-        price_data: {
-          currency: "gbp",
-          product_data: {
-            name: event.title,
-            description: event.description.substring(0, 500),
-          },
-          unit_amount: Math.round(event.price * 100), // Convert to cents
-        },
-        quantity: 1,
-      },
-    ],
-    mode: "payment",
-    return_url: `${process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"}/events/${eventId}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
+  // Create PaymentIntent for embedded checkout
+  const paymentIntent = await stripe.paymentIntents.create({
+    amount: Math.round(event.price * 100), // Convert to pence
+    currency: "gbp",
     metadata: {
       event_id: eventId,
       user_id: user.id,
+      event_title: event.title,
+      event_description: event.description.substring(0, 500),
     },
   })
 
-  return session.client_secret
+  // Create booking with pending status
+  await supabase.from("bookings").insert({
+    event_id: eventId,
+    user_id: user.id,
+    status: "pending",
+    payment_status: "pending",
+    stripe_payment_intent_id: paymentIntent.id,
+  })
+
+  return paymentIntent.client_secret!
 }
 
-export async function verifyPayment(sessionId: string) {
-  const session = await stripe.checkout.sessions.retrieve(sessionId)
+export async function verifyPayment(paymentIntentId: string) {
+  const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId)
 
-  if (session.payment_status === "paid") {
+  if (paymentIntent.status === "succeeded") {
     const supabase = await createClient()
 
-    // Create booking
-    const { error } = await supabase.from("bookings").insert({
-      event_id: session.metadata?.event_id,
-      user_id: session.metadata?.user_id,
-      status: "confirmed",
-      payment_status: "completed",
-      stripe_payment_intent_id: session.payment_intent as string,
-    })
+    // Update booking status to confirmed
+    const { error } = await supabase
+      .from("bookings")
+      .update({
+        status: "confirmed",
+        payment_status: "completed",
+      })
+      .eq("stripe_payment_intent_id", paymentIntentId)
 
     if (error) {
-      console.error("Error creating booking:", error)
-      throw new Error("Failed to create booking")
+      console.error("Error updating booking:", error)
+      throw new Error("Failed to update booking")
     }
 
     return true

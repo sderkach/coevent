@@ -13,19 +13,19 @@ export default async function CheckoutSuccessPage({
   searchParams 
 }: { 
   params: Promise<{ id: string }>
-  searchParams: Promise<{ session_id?: string }>
+  searchParams: Promise<{ payment_intent?: string }>
 }) {
   const { id } = await params
-  const { session_id } = await searchParams
+  const { payment_intent } = await searchParams
   const supabase = await createClient()
 
-  if (!session_id) {
+  if (!payment_intent) {
     redirect(`/events/${id}`)
   }
 
-  // Verify payment and create booking
+  // Verify payment and update booking
   try {
-    await verifyPayment(session_id)
+    await verifyPayment(payment_intent)
   } catch (error) {
     console.error("Payment verification error:", error)
   }
